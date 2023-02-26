@@ -14,6 +14,7 @@ import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.effects.FlxFlicker;
 import flixel.FlxSubState;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.effects.FlxTrail;
@@ -50,6 +51,7 @@ import editors.CharacterEditorState;
 import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import Note.EventNote;
+import lime.app.Application;
 import openfl.events.KeyboardEvent;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
@@ -1474,6 +1476,11 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
 			FlxG.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
+		}
+
+		if (script != null)
+		{
+			script.executeFunc("onCreatePost");
 		}
 		callOnLuas('onCreatePost', []);
 
@@ -3490,6 +3497,10 @@ class PlayState extends MusicBeatState
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
 		callOnLuas('onUpdatePost', [elapsed]);
+		if (script != null)
+		{
+			script.executeFunc("onUpdatePost");
+		}
 	}
 
 	function openPauseMenu()
@@ -4140,6 +4151,11 @@ class PlayState extends MusicBeatState
 			}
 		}
 		#end
+
+		if (script != null)
+		{
+			script.executeFunc("onEndSong");
+		}
 
 		var ret:Dynamic = callOnLuas('onEndSong', [], false);
 		if(ret != FunkinLua.Function_Stop && !transitioning) {
@@ -5235,6 +5251,12 @@ class PlayState extends MusicBeatState
 	{
 		super.beatHit();
 
+		if (script != null)
+		{
+			script.setVariable("curBeat", curBeat);
+			script.executeFunc("onBeatHit");
+		}
+
 		if(lastBeatHit >= curBeat) {
 			//trace('BEAT HIT: ' + curBeat + ', LAST HIT: ' + lastBeatHit);
 			return;
@@ -5565,16 +5587,30 @@ class PlayState extends MusicBeatState
 			{
 			});
 
+			script.setVariable("onCreatePost", function()
+			{
+			});
+
 			script.setVariable("onStartCountdown", function()
 			{
+			});
+
+			script.setVariable("onEndSong", function()
+			{				
 			});
 
 			script.setVariable("onStepHit", function()
 			{
 			});
 
+			script.setVariable("onBeatHit", function(){
+			});
+
 			script.setVariable("onUpdate", function()
 			{
+			});
+
+			script.setVariable("onUpdatePost", function(){
 			});
 
 			script.setVariable("import", function(lib:String, ?as:Null<String>) // Does this even work?
@@ -5591,13 +5627,17 @@ class PlayState extends MusicBeatState
 			});
 
 			script.setVariable("curStep", curStep);
+			script.setVariable("curBeat", curBeat);
 			script.setVariable("bpm", SONG.bpm);
-
-			// PRESET CLASSES
+			script.setVariable("song", SONG.song);
 			script.setVariable("PlayState", instance);
 			script.setVariable("FlxTween", FlxTween);
 			script.setVariable("FlxEase", FlxEase);
 			script.setVariable("FlxSprite", FlxSprite);
+			script.setVariable("FlxObject", FlxObject);
+			script.setVariable("FlxGraphic", FlxGraphic);
+			script.setVariable("FlxFlicker", FlxFlicker);
+			script.setVariable("Application", Application);
 			script.setVariable("Math", Math);
 			script.setVariable("FlxG", FlxG);
 			script.setVariable("ClientPrefs", ClientPrefs);
@@ -5615,6 +5655,8 @@ class PlayState extends MusicBeatState
 			script.setVariable("FlxTextFormatMarkerPair", FlxTextFormatMarkerPair);
 
 			script.runScript(hxdata);
+
+			//and that's all for now, I'll finish it in the next updates
 		}
 	}
 }
