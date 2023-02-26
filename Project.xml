@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="Friday Night Funkin': Wtf Engine" file="WTFEngine" packageName="com.marazak.wtfengine" package="com.marazak.wtfengine" main="Main" version="0.2.8" company="Mrzk" />
+
+	<set name="APP_ID" value="0x0100f6c013bbc000" />
+
+	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/>
+
+	<app preloader="flixel.system.FlxPreloader" />
+
+	<set name="SWF_VERSION" value="11.8" />
+
+	<window width="1280" height="720" fps="" background="#000000" hardware="true" vsync="false" />
+
+	<window if="html5" resizable="true" />
+
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" vsync="false"/>
+
+	<window if="mobile" orientation="landscape" fullscreen="true" width="0" height="0" resizable="false"/>
+
+	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
+
+	<set name="BUILD_DIR" value="export/debug" if="debug" />
+	<set name="BUILD_DIR" value="export/release" unless="debug" />
+	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
+
+	<classpath name="source" />
+	
+	<define name="MODS_ALLOWED" if="desktop" />
+	<define name="LUA_ALLOWED" if="desktop" />
+	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
+	<define name="ACHIEVEMENTS_ALLOWED" />
+	<define name="CRASH_HANDLER" if="desktop release" />
+	<assets path="art/WTFEngine-Crash.exe" type="template" rename='FlixelCrashHandler.exe' if="windows" />
+	<assets path='art/crash logs go here.txt' rename='crash/crash logs go here.txt' if="CRASH_HANDLER" />
+
+	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
+	<assets path="assets/preload" rename="assets" exclude="*.mp3"  unless="web"/>
+
+	<define name="PRELOAD_ALL" unless="web" />
+	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
+	
+	<library name="videos"        preload="true" />
+	<section if="PRELOAD_ALL">
+	    <library name="achievements"  preload="true" />
+		<library name="songs"         preload="true" />
+		<library name="shared"        preload="true" />
+		<library name="week2"         preload="true" />
+		<library name="week3"         preload="true" />
+		<library name="week4"         preload="true" />
+		<library name="week5"         preload="true" />
+		<library name="week6"         preload="true" />
+		<library name="week7"         preload="true" />
+	</section>
+	
+	<section if="NO_PRELOAD_ALL">
+	    <library name="achievements"  preload="false" />
+		<library name="songs"         preload="true" />
+		<library name="shared"        preload="false" />
+		<library name="week2"         preload="false" />
+		<library name="week3"         preload="false" />
+		<library name="week4"         preload="false" />
+		<library name="week5"         preload="false" />
+		<library name="week6"         preload="false" />
+		<library name="week7"         preload="false" />
+	</section>
+	
+	<assets path="assets/achievements"  library='achievements'  if="ACHIEVEMENTS_ALLOWED"/>
+	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
+	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
+	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
+	<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
+	<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
+	<assets path="assets/week7"         library="week7"         exclude="*.ogg" if="web"/>
+	<assets path="assets/week7"         library="week7"         exclude="*.mp3" unless="web"/>
+	
+	<section if="MODS_ALLOWED">
+		<assets path='example_mods' rename='mods' embed='false'/>
+	</section>
+	<assets path='art/readme.txt' rename='do NOT readme.txt' />
+	<assets path="assets/fonts" embed='true'/>
+
+	<haxelib name="flixel" />
+	<haxedev set='webgl' />
+
+	<haxelib name="flixel-addons" />
+	<haxelib name="hscript" />
+	<define name="hscriptPos" />
+
+	<haxelib name="flixel-ui" />
+	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
+	<haxelib name="hxCodec" if="VIDEOS_ALLOWED"/>
+	<haxelib name="faxe" if='switch'/>
+	<haxelib name="discord_rpc" if="desktop"/>
+
+	<haxedef name="FLX_NO_FOCUS_LOST_SCREEN" />
+	
+	<haxedef name="HXC_DEBUG_TRACE" if="debug" />
+	
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+
+	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
+	
+	<haxedef name="HXCPP_CHECK_POINTER" if="CRASH_HANDLER" />
+	<haxedef name="HXCPP_STACK_LINE" if="CRASH_HANDLER" />
+	
+	<icon path="art/icon16.png" size='16'/>
+	<icon path="art/icon32.png" size='32'/>
+	<icon path="art/icon64.png" size='64'/>
+	<icon path="art/iconOG.png" />
+</project>
