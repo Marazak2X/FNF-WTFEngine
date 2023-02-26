@@ -25,7 +25,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var wtfEngineVersion:String = '0.1.2';
+	public static var wtfEngineVersion:String = '0.1.0';
 
 	public static var psychEngineVersion:String = '0.6.3';
 
